@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class CreateFoodResponseDto {
 
     private UUID userId;
 
-    private Instant createdAt;
+    private LocalDate createdAt;
 
-    private Instant updatedAt;
+    private LocalDate updatedAt;
 
 }

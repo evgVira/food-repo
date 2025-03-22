@@ -2,6 +2,7 @@ package com.example.testfoodapp.service.impl;
 
 import com.example.testfoodapp.dto.user.CreateUserRequestDto;
 import com.example.testfoodapp.dto.user.CreateUserResponseDto;
+import com.example.testfoodapp.dto.user.DailyCaloriesReportResponseDto;
 import com.example.testfoodapp.dto.user.UserInfoResponseDto;
 import com.example.testfoodapp.enums.PhysicalActivity;
 import com.example.testfoodapp.enums.UserGender;
@@ -17,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -70,6 +74,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkUserExistById(UUID userId) {
         return userEntityRepository.existsById(userId);
+    }
+
+    @Override
+    public DailyCaloriesReportResponseDto getDailyCaloriesReport(UUID userId, LocalDate date) {
+        int allDailyCalories = dailyCaloriesService.getCaloriesStatisticByUser(userId, date);
+        String userDailyCaloriesNorm = userEntityRepository.getUserDailyCaloriesNorm(userId);
+        boolean reachedNorm = dailyCaloriesService.checkUserReachedNorm(userDailyCaloriesNorm, allDailyCalories);
+        String userName = userEntityRepository.getUserNameByUserId(userId);
+        return userMapper.mapToDailyCaloriesReportResponse(userName, userDailyCaloriesNorm,
+                reachedNorm, allDailyCalories, date);
+    }
+
+    @Override
+    public List<DailyCaloriesReportResponseDto> getDailyCaloriesReportForDays(UUID userId, LocalDate dateFrom, LocalDate dateTo) {
+        Map<LocalDate, Integer> allCaloriesByDays = dailyCaloriesService.getCaloriesStatisticByUser(userId, dateFrom, dateTo);
+        String userDailyCaloriesNorm = userEntityRepository.getUserDailyCaloriesNorm(userId);
+        String username = userEntityRepository.getUserNameByUserId(userId);
+        return allCaloriesByDays.entrySet().stream()
+                .map(entry -> {
+                    boolean reachedNorm = dailyCaloriesService.checkUserReachedNorm(userDailyCaloriesNorm, entry.getValue());
+                    return userMapper.mapToDailyCaloriesReportResponse(username, userDailyCaloriesNorm,
+                            reachedNorm, entry.getValue(), entry.getKey());
+                }).toList();
     }
 
     private UserEntity findUserById(UUID userId) {

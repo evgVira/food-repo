@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,7 +28,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserRequestException.class)
-    public ResponseEntity<ErrorDto> UserRequestException(UserRequestException exception) {
+    public ResponseEntity<ErrorDto> handleUserRequestException(UserRequestException exception) {
+        logError(exception, HttpStatus.BAD_REQUEST);
+        return buildErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
         logError(exception, HttpStatus.BAD_REQUEST);
         return buildErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }

@@ -2,9 +2,12 @@ package com.example.testfoodapp.mapper;
 
 import com.example.testfoodapp.dto.user.CreateUserRequestDto;
 import com.example.testfoodapp.dto.user.CreateUserResponseDto;
+import com.example.testfoodapp.dto.user.DailyCaloriesReportResponseDto;
 import com.example.testfoodapp.dto.user.UserInfoResponseDto;
 import com.example.testfoodapp.model.UserEntity;
 import org.mapstruct.*;
+
+import java.time.LocalDate;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
@@ -39,5 +42,13 @@ public interface UserMapper {
     @Mapping(target = "goal", source = "goal")
     @Mapping(target = "dailyCalories", source = "dailyCalories")
     UserInfoResponseDto mapToUserInfoResponseDto(UserEntity userEntity);
+
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "dailyCaloriesNorm", source = "dailyCaloriesNorm")
+    @Mapping(target = "reachedNorm", source = "reachedNorm")
+    @Mapping(target = "consumedCalories", source = "consumedCalories")
+    @Mapping(target = "dateCaloriesTracking", source = "dateCaloriesTracking")
+    DailyCaloriesReportResponseDto mapToDailyCaloriesReportResponse(String name, String dailyCaloriesNorm, Boolean reachedNorm,
+                                                                    int consumedCalories, LocalDate dateCaloriesTracking);
 
 }

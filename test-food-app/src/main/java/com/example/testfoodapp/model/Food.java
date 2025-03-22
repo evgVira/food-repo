@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -39,8 +40,8 @@ public class Food {
     private UUID userId;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDate updatedAt;
 }

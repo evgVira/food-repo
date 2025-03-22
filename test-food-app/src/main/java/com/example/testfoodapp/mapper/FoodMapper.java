@@ -18,8 +18,8 @@ public interface FoodMapper {
     @Mapping(target = "fats", source = "createFoodRequestDto.fats")
     @Mapping(target = "carbohydrates", source = "createFoodRequestDto.carbohydrates")
     @Mapping(target = "userId", source = "userId")
-    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
-    @Mapping(target = "updatedAt", expression = "java(java.time.Instant.now())")
+    @Mapping(target = "createdAt", expression = "java(java.time.LocalDate.now())")
+    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDate.now())")
     Food mapToFood(CreateFoodRequestDto createFoodRequestDto, UUID userId);
 
     @Mapping(target = "id", source = "id")
